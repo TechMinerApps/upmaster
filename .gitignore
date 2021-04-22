@@ -40,3 +40,6 @@ tmp
 /frontend/cypress/videos/
 services.yml
 statping.wiki
+
+# Do not include VSCode configuration
+/.vscode/

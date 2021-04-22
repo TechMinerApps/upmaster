@@ -1,13 +1,12 @@
-name: Master Build
+name: Main Branch Build
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
-
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -449,7 +448,14 @@ jobs:
           delayRequest: 600
 
   docker-release:
-    needs: [build, test, test-postman-sqlite, test-postman-postgres, test-postman-mysql]
+    needs:
+      [
+        build,
+        test,
+        test-postman-sqlite,
+        test-postman-postgres,
+        test-postman-mysql,
+      ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Statping Repo
@@ -488,27 +494,27 @@ jobs:
       - name: Docker Build :lastest
         run: make buildx-latest
 
-#  sentry-release:
-#    needs: docker-release
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Statping Repo
-#        uses: actions/checkout@v2
-#
-#      - name: Setup Sentry CLI
-#        uses: mathrix-education/setup-sentry-cli@master
-#        with:
-#          version: latest
-#          url: ${{ secrets.SENTRY_URL }}
-#          token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-#          organization: statping
-#
-#      - name: Setting ENV's
-#        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
-#        shell: bash
-#
-#      - name: Sentry Release
-#        run: make sentry-release
+  #  sentry-release:
+  #    needs: docker-release
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout Statping Repo
+  #        uses: actions/checkout@v2
+  #
+  #      - name: Setup Sentry CLI
+  #        uses: mathrix-education/setup-sentry-cli@master
+  #        with:
+  #          version: latest
+  #          url: ${{ secrets.SENTRY_URL }}
+  #          token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #          organization: statping
+  #
+  #      - name: Setting ENV's
+  #        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+  #        shell: bash
+  #
+  #      - name: Sentry Release
+  #        run: make sentry-release
 
   homebrew-release:
     needs: docker-release

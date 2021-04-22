@@ -2,19 +2,18 @@ name: Development Build
 on:
   push:
     branches:
-      - dev
+      - "!main"
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
-
   frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.15.x
+          go-version: 1.16.x
       - uses: actions/setup-node@v1
         with:
           node-version: 12.18.2
@@ -449,7 +448,14 @@ jobs:
           delayRequest: 600
 
   docker-release:
-    needs: [test, build, test-postman-sqlite, test-postman-mysql, test-postman-postgres]
+    needs:
+      [
+        test,
+        build,
+        test-postman-sqlite,
+        test-postman-mysql,
+        test-postman-postgres,
+      ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Statping Repo
@@ -487,7 +493,6 @@ jobs:
 
       - name: Docker Build :dev
         run: make buildx-dev
-
 #  sentry-release:
 #    needs: [test, test-postman-sqlite, test-postman-postgres, test-postman-mysql]
 #    runs-on: ubuntu-latest
